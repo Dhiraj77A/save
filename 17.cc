@@ -17,7 +17,7 @@ class coordinate{
     friend coordinate operator -(const coordinate&a, const coordinate&b);
 
     void showdata(){
-        cout<<"("<<x<<","<<y<<","<<z<<")"<<endl;
+        cout<<"("<<x<<","<<y<<","<<z<<""<<endl;
     }
 };
 
