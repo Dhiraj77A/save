@@ -2,7 +2,7 @@
 #include<cstring>
 using namespace std;
 class words{
-    public:
+    private:
     char *ch;
 
     public:
@@ -12,6 +12,22 @@ class words{
         ch=new char[len+1];
         strcpy(ch,w1);
     }
+    words& operator +=(const words&str1){
+        int n=strlen(str1.ch)+strlen(ch)+1;
+        char * newSpace=new char[n];
+        int j=0,i=0;
+        while(ch[i]!='\0'){
+            newSpace[j++]=ch[i++];
+        }
+        i=0;
+        while(str1.ch[i]!='\0'){
+            newSpace[j++]=str1.ch[i++];
+        }
+        newSpace[j]='\0';
+        delete []ch;
+        ch=newSpace;
+        return  *this;
+}
     void display(){
         cout<<"concatenated string: "<<ch<<endl;
     }
@@ -19,31 +35,15 @@ class words{
         delete[]ch;
         cout<<"memory freed"<<endl;
     }
-
-
 };
 
-char* concatenate(char *ch1,char *ch2){
-        int n=strlen(ch1)+strlen(ch2)+1;
-        char *ptr=new char[n];
-        int j=0,i=0;
-        while(ch1[i]!='\0'){
-            ptr[j++]=ch1[i++];
-        }
-        i=0;
-        while(ch2[i]!='\0'){
-            ptr[j++]=ch2[i++];
-        }
-        ptr[j]='\0';
-        return  ptr;
-}
+
+
 int main(){
     words w1("engineers are");
     words w2("creates of logic");
-   
-    char* combined=concatenate(w1.ch,w2.ch);
-    words w3(combined);
-    w3.display();
+    w1+=w2;
+    w1.display();
 
     return 0;
 }
