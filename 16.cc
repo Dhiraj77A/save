@@ -1,78 +1,99 @@
 #include <iostream>
 using namespace std;
+class calculator;
+class coordinate;
+class friendClass;
 
-class Calculator; // Forward declaration
-
-class Point2D {
-private:
-    double x, y;
-public:
-    Point2D(double a=0, double b=0) : x(a), y(b) {}
-
-    void display() const {
-        cout << "(" << x << ", " << y << ")" << endl;
+coordinate subtraction (const coordinate&a,const calculator&b);
+coordinate multiplication (const coordinate&a,const calculator&b);
+coordinate division (const coordinate&a,const calculator&b);
+class coordinate{
+    private:
+    int x;
+    int y;
+    void secretMessage() const {
+        cout << "[coordinate] Secret private function accessed!" << endl;
     }
 
-    // Only addPoints is a friend, not the whole Calculator
-    friend Point2D Calculator::addPoints(const Point2D&, const Point2D&);
-
-    // Demonstrate all member functions of Calculator are friends
-    friend class AllFriendCalculator;
+    public:
+    coordinate(int a=0,int b=0){
+        x=a;
+        y=b;
+    }
+    
+    void display(){
+        cout<<"("<<x<<","<<y<<")"<<endl;
+    }
+    friend friendClass;
+    coordinate add(const calculator&a, const coordinate&b);
+    friend coordinate subtraction (const coordinate&a,const calculator&b);
+    friend coordinate multiplication (const coordinate&a,const calculator&b);
+    friend coordinate division (const coordinate&a,const calculator&b);
 };
 
-class Calculator {
-public:
-    // A. Friend function (declared as friend in Point2D)
-    Point2D addPoints(const Point2D &p1, const Point2D &p2) {
-        // Accessing private members of Point2D
-        return Point2D(p1.x + p2.x, p1.y + p2.y);
+class calculator{
+    private:
+    int x;
+    int y;
+
+    public:
+    calculator(int a=0,int b=0){
+        x=a;
+        y=b;
     }
 
-    // B. Bridge functions (work as normal member functions, not friends)
-    Point2D multiply(const Point2D &p1, const Point2D &p2) {
-        return Point2D(p1.x * p2.x, p1.y * p2.y);
+    void display(){
+        cout<<"("<<x<<","<<y<<")"<<endl;
     }
-    Point2D divide(const Point2D &p1, const Point2D &p2) {
-        return Point2D(p1.x / p2.x, p1.y / p2.y);
-    }
-    Point2D subtract(const Point2D &p1, const Point2D &p2) {
-        return Point2D(p1.x - p2.x, p1.y - p2.y);
-    }
-};
 
-// C. All member functions of this class are friends of Point2D
-class AllFriendCalculator {
-public:
-    void showPrivate(const Point2D &p) {
-        cout << "Accessing private x: " << p.x << ", y: " << p.y << endl;
-    }
+    friend coordinate coordinate::add( const calculator&a, const coordinate&b);
+    friend coordinate subtraction (const coordinate&a,const calculator&b);
+    friend coordinate multiplication (const coordinate&a,const calculator&b);
+    friend coordinate division (const coordinate&a,const calculator&b);
 };
+class friendClass{
+    public:
+    void showPrivate(const coordinate& c) {
+        cout << "[friendClass] Accessing private data: (" << c.x << "," << c.y << ")" << endl;
+        c.secretMessage(); 
+    }
+
+};
+coordinate coordinate::add(const calculator&a, const coordinate&b){
+    return coordinate(a.x+b.x,a.y+b.y);
+}
+coordinate subtraction (const coordinate&a,const calculator&b){
+    return coordinate(a.x-b.x,a.y-b.y);
+}
+coordinate multiplication (const coordinate&a,const calculator&b){
+    return coordinate(a.x*b.x,a.y*b.y);
+}
+coordinate division (const coordinate&a,const calculator&b){
+    if(b.x==0||b.y ==0) return -1;
+    return coordinate(a.x/b.x,a.y/b.y);
+}
 
 int main() {
-    Point2D p1(2, 3), p2(4, 1);
-    Calculator calc;
-
-    cout << "p1: "; p1.display();
-    cout << "p2: "; p2.display();
-
-    // A. Addition using friend function
-    Point2D sum = calc.addPoints(p1, p2);
-    cout << "Addition (friend): "; sum.display();
-
-    // B. Bridge functions (multiplication, division, subtraction)
-    Point2D product = calc.multiply(p1, p2);
-    cout << "Multiplication (bridge): "; product.display();
-
-    Point2D quotient = calc.divide(p1, p2);
-    cout << "Division (bridge): "; quotient.display();
-
-    Point2D difference = calc.subtract(p1, p2);
-    cout << "Subtraction (bridge): "; difference.display();
-
-    // C. Demonstrate class friendship
-    AllFriendCalculator afc;
-    cout << "AllFriendCalculator accessing private members of p1: ";
-    afc.showPrivate(p1);
-
+    int x,y;
+    cout<<"enter coordinate 1: ";
+    cin>>x>>y;
+    coordinate c1(x,y);
+    cout<<"enter coordinate 2: ";
+    cin>>x>>y;
+    calculator c2(x,y);
+    coordinate c3=c1.add(c2,c1);
+    cout<<"addition: ";
+    c3.display();
+     c3=subtraction(c1,c2);
+    cout<<"Subtraction: ";
+    c3.display();
+     c3=multiplication(c1,c2);
+    cout<<"Multiplication: ";
+    c3.display();
+     c3=division(c1,c2);
+    cout<<"Division: ";
+    c3.display();
+    friendClass f1;
+    f1.showPrivate(c1);
     return 0;
 }

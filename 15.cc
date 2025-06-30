@@ -16,6 +16,7 @@ public:
         num_vehicle = copyobj.num_vehicle;
         hour = copyobj.hour;
         rate = copyobj.rate;
+        cout<<"copy constructor called"<<endl;
     }
 
     void display(){
