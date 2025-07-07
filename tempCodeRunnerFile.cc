@@ -1,51 +1,99 @@
 #include<iostream>
+#include<cstring>
+#include<cstdlib>
+
 using namespace std;
-class carpark{
-    private:
-    int carId;
-    int chargeHour;
-    float parkedTime;
+
+class overloadIndex{
+    private: 
+    int arr[50];
 
     public:
-    void getCarId(int id){
-        carId=id;
+    overloadIndex(){
+        for(int i=0;i<50;i++){
+        arr[i]=(i+1)*2;
     }
-    void getChargeHour(int ch){
-        chargeHour=ch;
-    }
-    void getParkedTime(float time){
-        parkedTime=time;
     }
 
-    int showCarId(){
-        return carId;
+    int& operator[](const int& idx){
+        if(idx<0||idx>=50){
+            cout<<"you are trying to access index the is out of bound: error"<<endl;
+            exit(1);
+        }
+        return arr[idx];
+    }
+};
+
+class overloadNewDelete{
+    public:
+
+    overloadNewDelete(){
+        cout<<"allows only compile time memory allocation(no use of new and delete)"<<endl;
+    }
+    void* operator new(size_t)=delete;
+    void operator delete(void *)=delete;
+};
+
+class overloadAssignment{
+    private: 
+    char *ptr;
+
+    public:
+    overloadAssignment(const char*str=""){
+        ptr=new char[strlen(str)+1];
+        strcpy(ptr, str);
     }
 
-    float showCharge(){
-        return parkedTime*chargeHour;
+    overloadAssignment& operator=(const overloadAssignment& cpystr){
+        if(this!=&cpystr){
+            delete[] ptr;
+            ptr=new char[strlen(cpystr.ptr)+1];
+            strcpy(ptr,cpystr.ptr);
+        }
+        return *this;
+    }
+    void print() {
+        cout << ptr << endl;
     }
 
-    int showParkedHour(){
-        return parkedTime;
+    ~overloadAssignment(){
+        delete [] ptr;
+    }
+};
+
+class overloadCall{
+    public:
+    void operator ()(const char* string){
+        for(int i=strlen(string)-1;i>=0;i++){
+            cout<<string[i];
+        }
+        cout<<endl;
     }
 };
 
 int main(){
-    int id, ch;
-    float time;
-    cout<<"Enter the car id: ";
-    cin>>id;
-    cout<<"Enter the charge per hour: ";
-    cin>>ch;
-    cout<<"Enter the parked time: ";
-    cin>>time;
-    carpark car1;
-    car1.getCarId(id);
-    car1.getChargeHour(ch);
-    car1.getParkedTime(time);
+    overloadIndex data1;
+    int idx;
+    cout<<"Enter the index you want to access: ";
+    cin>>idx;
+    cout<<"element at idx "<<idx<<" is "<<data1[idx]<<endl;
 
-    cout<<" car id: "<<car1.showCarId()<<endl;
-    cout<<" Charge: "<<car1.showCharge()<<endl;
-    cout<<" Parked Hour: "<<car1.showParkedHour()<<endl;
+    overloadNewDelete obj1;
+    //overloadNewDelete* ptr=new int[24];
+    //delete [] ptr;
+    char word[50];
+    cout<<"Enter the str: ";
+    cin>>word;
+    overloadAssignment string1(word);
+    overloadAssignment strcpy;
+    strcpy=string1;
+    cout<<"copied string: ";
+    strcpy.print();
+
+    cout<<"enter any string: ";
+    cin>>word;
+    overloadCall reverse;
+    cout<<"reverse of word: ";
+    reverse(word);
     return 0;
 }

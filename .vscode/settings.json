@@ -2,9 +2,13 @@
     "files.associations": {
         "iomanip": "cpp",
         "ostream": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "sstream": "cpp"
     },
     "cSpell.words": [
+        "centi",
+        "cpystr",
+        "fdist",
         "friendfunction"
     ]
 }
