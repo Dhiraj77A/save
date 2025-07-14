@@ -3,9 +3,8 @@ using namespace std;
 
 class shape{
     public: 
-    virtual void area(){
-        cout<<"The area of the shapes shall be printed"<<endl;
-    }
+    virtual void getdata()=0;
+    virtual void area()=0;
 
     virtual ~shape(){
         cout<<"shape class(base class) destructor called"<<endl;
@@ -67,7 +66,7 @@ class trapezium: public shape{
     }
 
     void area(){
-        cout<<"The area of the rectangle: "<<0.50*h*(a+b)<<endl;
+        cout<<"The area of the trapezium: "<<0.50*h*(a+b)<<endl;
     }
 
     ~trapezium(){
@@ -84,12 +83,20 @@ int main(){
     trapezium t1;
 
     s=&c1;
+    s->getdata();
     s->area();
+    delete s;
 
     s=&r1;
+    s->getdata();
     s->area();
+    delete s;
+
 
     s=&t1;
+    s->getdata();
     s->area();
+    delete s;
+
     return 0;
 }
